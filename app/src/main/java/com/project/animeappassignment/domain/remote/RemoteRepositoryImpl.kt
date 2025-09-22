@@ -1,9 +1,11 @@
 package com.project.animeappassignment.domain.remote
 
+import android.util.Log
 import com.project.animeappassignment.domain.remote.dto.topanime.AnimeDetailsDto
 import com.project.animeappassignment.domain.remote.dto.topanime.DataDto
 import com.project.animeappassignment.domain.remote.dto.topanime.TopAnimesDto
 import com.project.animeappassignment.model.Data
+import com.project.animeappassignment.model.TopAnimes
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Dispatcher
@@ -20,4 +22,5 @@ class RemoteRepositoryImpl @Inject constructor(
     override suspend fun getAnimeDetails(animeId: Long): AnimeDetailsDto {
         return api.getAnimeDetails(animeId)
     }
+
 }

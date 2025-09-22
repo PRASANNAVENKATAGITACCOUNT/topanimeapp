@@ -1,5 +1,6 @@
 package com.project.animeappassignment.domain.use_case
 
+import android.util.Log
 import coil.network.HttpException
 import com.project.animeappassignment.common.Resource
 import com.project.animeappassignment.domain.remote.RemoteRepository
@@ -18,12 +19,16 @@ class GetAnimesUseCase @Inject constructor(
         try{
             emit(Resource.Loading<TopAnimes>("Loading animes"))
             val topAnimes = remoteRepository.getTopAnimes().createTopAnimes()
+            Log.d("GetAnimesUseCase ", "invoke: $topAnimes")
             emit(Resource.Success(topAnimes))
         }catch (e: HttpException){
+            Log.d("GetAnimesUseCase", "invoke: ${e.message}")
             emit(Resource.Error<TopAnimes>(e.localizedMessage ?: " Line 23 GetAnimesUseCase An unexpected error occured. "))
         }catch (e: IOException){
+            Log.d("GetAnimesUseCase", "invoke: ${e.message}")
             emit(Resource.Error<TopAnimes>(e.localizedMessage ?: "  Line 25 GetAnimesUseCase Problem in Internet connection."))
         }catch (e: Exception){
+            Log.d("GetAnimesUseCase ", "invoke: ${e.message}")
             emit(Resource.Error<TopAnimes>(e.localizedMessage ?: "  Line 27 GetAnimesUseCase This error occured"))
         }
     }

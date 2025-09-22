@@ -7,6 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.project.animeappassignment.common.Constants.BASE_URL
 import com.project.animeappassignment.common.NetworkConnectivityObserver
 import com.project.animeappassignment.common.NetworkStatus
 import com.project.animeappassignment.domain.use_case.GetAnimesUseCase
@@ -15,15 +16,21 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 import  com.project.animeappassignment.common.Resource
+import com.project.animeappassignment.domain.remote.JikanAPI
 import com.project.animeappassignment.domain.use_case.GetAnimeLocallyUseCase
 import com.project.animeappassignment.domain.use_case.SaveAnimeLocallyUseCase
 import com.project.animeappassignment.model.Data
 import com.project.animeappassignment.model.TopAnimes
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 
 @HiltViewModel
@@ -31,7 +38,7 @@ class HomeScreenViewModel @Inject constructor (
     val getAnimesUseCase: GetAnimesUseCase,
     val getAnimeLocallyUseCase: GetAnimeLocallyUseCase,
     val saveAnimeLocallyUseCase: SaveAnimeLocallyUseCase,
-    val networkConnectivityObserver: NetworkConnectivityObserver
+     networkConnectivityObserver: NetworkConnectivityObserver
 ) : ViewModel() {
 
     val isConnected: StateFlow<Boolean> = networkConnectivityObserver.observe()
@@ -47,8 +54,8 @@ class HomeScreenViewModel @Inject constructor (
 
     val localSyncState = mutableStateOf<String?>(null)
 
-    init {
 
+    init {
         if(isConnected.value) {
             getTopAnimeAPI()
         }else{
@@ -72,7 +79,7 @@ class HomeScreenViewModel @Inject constructor (
                         topAnime = result.data,
                         error=""
                     )
-                    Log.d("Data_Inserted", " calling sync data ")
+                    Log.d("Data_Inserted", " calling sync data ${result.data} ")
                     saveDataLocally(result.data?.data)
                 }
                 is Resource.Error ->{
@@ -89,6 +96,7 @@ class HomeScreenViewModel @Inject constructor (
 
     fun getTopAnimeLocal(){
         getAnimeLocallyUseCase().onEach { result->
+
             when(result){
                 is Resource.Loading ->{
                     _state.value= TopAnimesState(

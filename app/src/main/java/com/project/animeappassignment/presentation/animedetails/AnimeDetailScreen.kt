@@ -207,7 +207,7 @@ fun AnimeDetailUI(animeDetailsViewModel:AnimeDetailsViewModel,data: Data?) {
                 .fillMaxWidth()
                 .padding(top=5.dp)
                 .border(2.dp, color = Color.Transparent)
-                .padding(8.dp),
+                .padding(top=8.dp),
             shape = topRoundedShape,
 
         ) {

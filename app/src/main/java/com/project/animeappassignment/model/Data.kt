@@ -13,4 +13,8 @@ data class Data(
     val trailer: Trailer?,
     val genres: List<Genre?>?,
     val synopsis: String?,
-)
+){
+    override fun toString(): String {
+        return "Data(mal_id=$mal_id, title=$title, episodes=$episodes, rating=$rating, images=$images, trailer=$trailer, genres=$genres, synopsis=$synopsis)"
+    }
+}

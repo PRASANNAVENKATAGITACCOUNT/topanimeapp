@@ -1,6 +1,7 @@
 package com.project.animeappassignment.presentation.homescreen
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -42,11 +43,20 @@ import androidx.window.core.layout.WindowSizeClass
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.project.animeappassignment.common.Constants.BASE_URL
+import com.project.animeappassignment.domain.remote.JikanAPI
 import com.project.animeappassignment.model.Data
 import com.project.animeappassignment.presentation.Screen
 import com.project.animeappassignment.presentation.ui.theme.BackgroundColor
 import com.project.animeappassignment.presentation.ui.theme.GradientColors
 import com.project.animeappassignment.viewmodel.HomeScreenViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import okhttp3.Dispatcher
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import kotlin.contracts.contract
 
 
 @Composable
@@ -55,6 +65,7 @@ fun HomeScreen(
     homeScreenViewModel: HomeScreenViewModel= hiltViewModel()
     ) {
     val topAnimeState = homeScreenViewModel.state.value
+
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -69,7 +80,7 @@ fun HomeScreen(
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(brush =  Brush.linearGradient(colors = BackgroundColor))
+                        .background(brush = Brush.linearGradient(colors = BackgroundColor))
                         .systemBarsPadding()
                         .safeContentPadding()
                         .navigationBarsPadding()
@@ -88,7 +99,8 @@ fun HomeScreen(
                         Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 20.dp)
-                            .align(Alignment.Center)
+                            .align(Alignment.Center),
+                    color=Color.White
                 )
             }
 

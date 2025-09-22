@@ -15,6 +15,10 @@ class NetworkConnectivityObserver(context: Context) {
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
     fun observe(): Flow<NetworkStatus> = callbackFlow {
+        // checking Initial status
+        val currentStatus = getCurrentNetworkStatus()
+        trySend(currentStatus)
+
         val networkCallback = object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
                 trySend(NetworkStatus.Available)
@@ -22,6 +26,10 @@ class NetworkConnectivityObserver(context: Context) {
 
             override fun onLost(network: Network) {
                 trySend(NetworkStatus.Lost)
+            }
+
+            override fun onUnavailable() {
+                trySend(NetworkStatus.Unavailable)
             }
         }
 
@@ -31,11 +39,20 @@ class NetworkConnectivityObserver(context: Context) {
 
         connectivityManager.registerNetworkCallback(request, networkCallback)
 
-        // Close the flow when the consumer is no longer active
         awaitClose {
             connectivityManager.unregisterNetworkCallback(networkCallback)
         }
     }.distinctUntilChanged()
+
+    private fun getCurrentNetworkStatus(): NetworkStatus {
+        val network = connectivityManager.activeNetwork ?: return NetworkStatus.Unavailable
+        val caps = connectivityManager.getNetworkCapabilities(network) ?: return NetworkStatus.Unavailable
+        return if (caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) {
+            NetworkStatus.Available
+        } else {
+            NetworkStatus.Unavailable
+        }
+    }
 }
 
 sealed class NetworkStatus {
