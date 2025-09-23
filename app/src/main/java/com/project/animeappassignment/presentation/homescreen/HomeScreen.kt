@@ -26,6 +26,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -66,6 +67,14 @@ fun HomeScreen(
     ) {
     val topAnimeState = homeScreenViewModel.state.value
 
+    val isConnected = homeScreenViewModel.isConnected.collectAsState()
+    LaunchedEffect(isConnected.value) {
+        if (isConnected.value) {
+            homeScreenViewModel.getTopAnimeAPI()
+        } else {
+            homeScreenViewModel.getTopAnimeLocal()
+        }
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
