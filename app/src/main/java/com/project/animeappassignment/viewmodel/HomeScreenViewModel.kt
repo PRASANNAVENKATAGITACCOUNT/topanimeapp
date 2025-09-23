@@ -42,7 +42,6 @@ class HomeScreenViewModel @Inject constructor (
 ) : ViewModel() {
 
     val isConnected: StateFlow<Boolean> = networkConnectivityObserver.observe()
-        .debounce(300)
         .map { it == NetworkStatus.Available }
         .stateIn(
             scope = viewModelScope,
