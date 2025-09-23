@@ -42,10 +42,11 @@ class HomeScreenViewModel @Inject constructor (
 ) : ViewModel() {
 
     val isConnected: StateFlow<Boolean> = networkConnectivityObserver.observe()
+        .debounce(300)
         .map { it == NetworkStatus.Available }
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(3000L),
+            started = SharingStarted.WhileSubscribed(5000L),
             initialValue = false
         )
 
