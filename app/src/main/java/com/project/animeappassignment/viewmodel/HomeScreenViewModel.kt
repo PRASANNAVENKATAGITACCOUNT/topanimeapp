@@ -54,16 +54,20 @@ class HomeScreenViewModel @Inject constructor (
 
     val localSyncState = mutableStateOf<String?>(null)
 
+    var hasloadedData = false
+
 
     init {
         if(isConnected.value) {
             getTopAnimeAPI()
+            hasloadedData=true
         }else{
             getTopAnimeLocal()
         }
     }
 
     fun getTopAnimeAPI(){
+        if(hasloadedData) return
         getAnimesUseCase().onEach { result->
             when(result){
                 is Resource.Loading ->{

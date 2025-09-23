@@ -76,6 +76,7 @@ fun HomeScreen(
         LaunchedEffect(isConnected.value) {
             if (isConnected.value) {
                 homeScreenViewModel.getTopAnimeAPI()
+                homeScreenViewModel.hasloadedData=true
             } else {
                 homeScreenViewModel.getTopAnimeLocal()
             }
