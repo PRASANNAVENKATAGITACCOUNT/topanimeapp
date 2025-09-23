@@ -56,7 +56,6 @@ class HomeScreenViewModel @Inject constructor (
 
 
     init {
-        getTopAnimeAPI()
         if(isConnected.value) {
             getTopAnimeAPI()
         }else{
