@@ -67,19 +67,20 @@ fun HomeScreen(
     ) {
     val topAnimeState = homeScreenViewModel.state.value
 
-    val isConnected = homeScreenViewModel.isConnected.collectAsState()
-    LaunchedEffect(isConnected.value) {
-        if (isConnected.value) {
-            homeScreenViewModel.getTopAnimeAPI()
-        } else {
-            homeScreenViewModel.getTopAnimeLocal()
-        }
-    }
-
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets(left=0.dp, right = 0.dp, top = 0.dp, bottom = 0.dp)
     ) { innerPadding ->
+        val isConnected = homeScreenViewModel.isConnected.collectAsState()
+
+        LaunchedEffect(isConnected.value) {
+            if (isConnected.value) {
+                homeScreenViewModel.getTopAnimeAPI()
+            } else {
+                homeScreenViewModel.getTopAnimeLocal()
+            }
+        }
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
