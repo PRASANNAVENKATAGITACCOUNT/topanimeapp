@@ -45,7 +45,7 @@ class HomeScreenViewModel @Inject constructor (
         .map { it == NetworkStatus.Available }
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(3000L),
+            started = SharingStarted.WhileSubscribed(5000L),
             initialValue = false
         )
 
@@ -56,6 +56,7 @@ class HomeScreenViewModel @Inject constructor (
 
 
     init {
+        getTopAnimeAPI()
         if(isConnected.value) {
             getTopAnimeAPI()
         }else{
